@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.10.0)
 # 指定项目名称、版本和使用的语言
 project(SpaceShooter VERSION 0.1.0 LANGUAGES C CXX)
 
-# 设置编译选项
+# 设置编译器CPP标准
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 

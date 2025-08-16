@@ -87,6 +87,14 @@ int main(int, char**) // 注意：这里是SDL2要求的入口函数形式
         return 1;
     }
 
+    // 定义图片初始位置和速度
+    int imgX = 400;
+    int imgY = 550;
+    int imgW = 50;
+    int imgH = 50;
+    int imgSpeed = 3;
+    int direction = 1; // 1: 右移, -1: 左移
+
     // 渲染循环
     while(true)
     {
@@ -97,6 +105,13 @@ int main(int, char**) // 注意：这里是SDL2要求的入口函数形式
             {
                 break; 
             }
+        }
+
+        // 更新图片位置
+        imgX += imgSpeed * direction;
+        if (imgX <= 0 || imgX + imgW >= 800) // 碰到窗口(横向窗口X轴)边缘就反向
+        {
+            direction *= -1;
         }
 
         // 清屏
@@ -111,12 +126,18 @@ int main(int, char**) // 注意：这里是SDL2要求的入口函数形式
         SDL_Rect aImgRect = {400, 100, 300, 300};
         SDL_RenderCopy(renderer, texture, nullptr, &aImgRect);
 
+         // 画图片（动画）
+        SDL_Rect aImgRect1 = {imgX, imgY, imgW, imgH};
+        SDL_RenderCopy(renderer, texture, nullptr, &aImgRect1);
+
         // 显示文本
         SDL_Rect textRect = {380, 100, surface->w, surface->h}; // 文本位置
         SDL_RenderCopy(renderer, aTextTexture, nullptr, &textRect);
 
         // 更新屏幕，将渲染器的内容更新到屏幕上
         SDL_RenderPresent(renderer);
+
+        SDL_Delay(20); // 控制帧率，大约60FPS
     }
 
 
