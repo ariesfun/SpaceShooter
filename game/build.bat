@@ -1,7 +1,7 @@
-rm build -r
-mkdir build
+%不删除 build 目录，直接进入并编译%
+if not exist build mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 cd ..
-.\build\Release\SpaceShooter.exe
+.\SpaceShooter-Windows.exe
