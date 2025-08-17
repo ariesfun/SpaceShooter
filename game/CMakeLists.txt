@@ -31,12 +31,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_SOURCE_DIR})
 # 同时根据平台名称指定生成的程序名称, 如Win平台："SpaceShooter-Windows.exe "
 set(TARGET ${PROJECT_NAME}-${CMAKE_SYSTEM_NAME})
 
+# 设置当前项目包含的头文件目录
+set(CURRENT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 # 包含 SDL2 头文件
-include_directories(${SDL2_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIR} ${CURRENT_INCLUDE_DIR})
 # 添加其他CPP源文件
-#aux_source_directory(./game GAME_SRCS)
+aux_source_directory(src/ GAME_SRCS)
 # 构建可执行文件的名称和源代码文件（需编译的源文件）
-add_executable(${TARGET} main.cpp)
+add_executable(${TARGET} main.cpp ${GAME_SRCS})
 
 # 链接 SDL2 静态库
 target_link_libraries(${TARGET} 
