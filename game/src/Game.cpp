@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "SceneMain.h"
 
+#include <SDL_image.h>
+
 Game::Game()
 {
     // 初始化游戏
@@ -11,6 +13,13 @@ Game::~Game()
     // 清理资源
     Clean();
 }
+
+Game &Game::GetInstance()
+{
+    static Game instance;
+    return instance;
+}
+
     
 void Game::Init()
 {
@@ -37,6 +46,12 @@ void Game::Init()
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_CreateRenderer Error: %s", SDL_GetError());
         m_IsRunning = false;
     }
+    // SDL_image：图片处理初始化, 让其对PNG和JPG格式的图片进行支持
+    if(IMG_Init(IMG_INIT_PNG | IMG_INIT_JPG) != (IMG_INIT_PNG | IMG_INIT_JPG))
+    {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "IMG_Init Error: %s", SDL_GetError());
+        m_IsRunning = false;
+    }
 
     // 创建主场景及初始化
     m_CurrentScene = new SceneMain();
@@ -56,7 +71,11 @@ void Game::Run()         // 游戏主循环
 
 void Game::Clean()
 {
-    if(m_CurrentScene != nullptr) // 已有当前场景，先清理并删除它
+    // 清理图片资源
+    IMG_Quit();
+    
+    // 已有当前场景，先清理并删除它
+    if(m_CurrentScene != nullptr) 
     {
         m_CurrentScene->Clean();
         delete m_CurrentScene;
@@ -86,6 +105,16 @@ void Game::ChangeScene(Scene* scene)
     m_CurrentScene->Init();
 }
 
+SDL_Window* Game::GetWindow()
+{
+    return m_Window;
+}
+
+SDL_Renderer *Game::GetRenderer()
+{
+    return m_Renderer;
+}
+
 void Game::HandleEvents(SDL_Event* event)
 {
     while(SDL_PollEvent(event))
@@ -113,6 +142,6 @@ void Game::Render()
     SDL_RenderClear(m_Renderer);
     // 渲染当前场景
     m_CurrentScene->Render();
-    // 更新屏幕，将渲染器的内容更新到屏幕上
+    // 更新屏幕，将渲染器的内容显示更新到屏幕上
     SDL_RenderPresent(m_Renderer);
 }
